@@ -1,6 +1,10 @@
 package schemas
 
-import "gorm.io/gorm"
+import (
+	"time"
+
+	"gorm.io/gorm"
+)
 
 type Todo struct {
 	gorm.Model
@@ -26,11 +30,11 @@ type TodoDelete struct {
 }
 
 type TodoResponse struct {
-	ID          uint   `json:"id"`
-	Title       string `json:"title" binding:"required"`
-	Description string `json:"description" binding:"required"`
-	Completed   bool   `json:"completed" default:"false"`
-	CreatedAt   string `json:"createdAt"`
-	UpdatedAt   string `json:"updatedAt"`
-	DeletedAt   string `json:"deletedAt"`
+	ID          uint      `json:"id"`
+	Title       string    `json:"title" binding:"required"`
+	Description string    `json:"description" binding:"required"`
+	Completed   bool      `json:"completed" default:"false"`
+	CreatedAt   time.Time `json:"createdAt"`
+	UpdatedAt   time.Time `json:"updatedAt"`
+	DeletedAt   time.Time `json:"deletedAt"`
 }
