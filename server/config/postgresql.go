@@ -1,8 +1,10 @@
 package config
 
 import (
+	"fmt"
 	"os"
 
+	"github.com/joho/godotenv"
 	"github.com/tiburciohugo/go-react-todo/schemas"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -10,26 +12,14 @@ import (
 
 func InitializeDB() (*gorm.DB, error) {
 	logger := GetLogger("postgres")
-	dbPath := "./db/main.db"
-
-	_, err := os.Stat(dbPath)
-	if os.IsNotExist(err) {
-		logger.Infof("database file does not exist, creating it: %s", dbPath)
-		// create the database file
-		err = os.MkdirAll("./db", os.ModePerm)
-		if err != nil {
-			logger.Errorf("error creating database directory: %v", err)
-			return nil, err
-		}
-		file, err := os.Create(dbPath)
-		if err != nil {
-			logger.Errorf("error creating database file: %v", err)
-			return nil, err
-		}
-		file.Close()
+	err := godotenv.Load()
+	if err != nil {
+		logger.Errorf("error loading .env file: %v", err)
+		return nil, err
 	}
+	dns := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=%s", os.Getenv("DB_HOST"), os.Getenv("DB_USER"), os.Getenv("DB_PASSWORD"), os.Getenv("DB_NAME"), os.Getenv("DB_PORT"), os.Getenv("DB_SSLMODE"))
 
-	db, err := gorm.Open(postgres.Open(dbPath), &gorm.Config{})
+	db, err := gorm.Open(postgres.Open(dns), &gorm.Config{})
 	if err != nil {
 		logger.Errorf("error opening database: %v", err)
 		return nil, err
