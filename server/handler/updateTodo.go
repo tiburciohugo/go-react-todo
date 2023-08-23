@@ -11,7 +11,7 @@ import (
 func UpdateTodoHandler(c *gin.Context) {
 	request := UpdateTodoRequest{}
 
-	c.BindJSON(request)
+	c.BindJSON(&request)
 
 	if err := request.Validate(); err != nil {
 		logger.Errorf("error validating request: %s", err.Error())

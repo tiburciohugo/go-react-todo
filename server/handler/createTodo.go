@@ -24,7 +24,7 @@ func CreateTodoHandler(c *gin.Context) {
 		Completed:   request.Completed,
 	}
 
-	if err := db.Create(&request).Error; err != nil {
+	if err := db.Create(&todo).Error; err != nil {
 		logger.Errorf("error creating todo: %v", err.Error())
 		sendError(c, http.StatusInternalServerError, err.Error())
 		return
